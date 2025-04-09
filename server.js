@@ -3,7 +3,7 @@ import cors from "cors";
 import postRoutes from "./routes/posts.js";
 
 const app = express();
-app.use(cors());
+app.use(cors({ origin: "https://frontend-anksl0zu4-zeethons-projects.vercel.app" }));
 app.use(express.json());
 
 const PORT = process.env.PORT || 10000;
