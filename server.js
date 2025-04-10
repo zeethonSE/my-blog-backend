@@ -5,20 +5,26 @@ import postRoutes from "./routes/posts.js";
 const app = express();
 app.use(express.json());
 
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (!origin || origin.includes("vercel.app")) {
-      // Allow any Vercel-originated frontend
+const cors = require("cors");
+
+const allowedOrigins = [
+  "https://frontend-iota-sable.vercel.app",        // replace with your domain
+  /\.vercel\.app$/,                                 // allow preview deployments
+  "http://localhost:5173",                          // dev
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.some(o => {
+      if (typeof o === 'string') return o === origin;
+      return o instanceof RegExp && o.test(origin);
+    })) {
       callback(null, true);
     } else {
-      // Deny requests from non-Vercel origins (for security)
-      callback(new Error("Not allowed by CORS"));
+      callback(new Error('Not allowed by CORS'));
     }
-  },
-};
-
-app.use(cors(corsOptions));
-
+  }
+}));
 
 const PORT = process.env.PORT || 10000;
 
