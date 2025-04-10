@@ -4,33 +4,17 @@ import postRoutes from "./routes/posts.js";
 
 const app = express();
 app.use(express.json());
-
-const allowedOrigins = [
-  "https://frontend-iota-sable.vercel.app", // ✅ Preferred stable domain
-  "https://frontend-abubzk0g2-zeethons-projects.vercel.app",        // ✅ Temporary deployment domain (you can add more)
-];
-
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      // allow requests with no origin (like curl or postman)
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      } else {
-        return callback(new Error("Not allowed by CORS"));
-      }
-    },
-  })
-);
-
 const PORT = process.env.PORT || 10000;
 
 //frontend hitting the server
 app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
+  console.log("Origin:", req.headers.origin);
   next();
 });
+
+app.use(cors({
+  origin: "https://frontend-iota-sable.vercel.app",
+}));
 
 // ✅ Use the imported `postRoutes`
 app.use("/posts", postRoutes);
