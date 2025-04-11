@@ -6,14 +6,24 @@ const app = express();
 app.use(express.json());
 const PORT = process.env.PORT || 10000;
 
-//frontend hitting the server
-app.use((req, res, next) => {
-  console.log("Origin:", req.headers.origin);
-  next();
-});
+import cors from "cors";
+
+const allowedOrigins = [
+  "https://frontend-iota-sable.vercel.app",
+];
 
 app.use(cors({
-  origin: "https://frontend-iota-sable.vercel.app",
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like curl or Postman)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
 }));
 
 // ✅ Use the imported `postRoutes`
