@@ -6,8 +6,6 @@ const app = express();
 app.use(express.json());
 const PORT = process.env.PORT || 10000;
 
-import cors from "cors";
-
 const allowedOrigins = [
   "https://frontend-iota-sable.vercel.app",
 ];
